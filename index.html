@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>学指導要領の内容構成</title>
+<meta name="description" content="学習指導要領の内容構成を学年・領域ごとにたどり、各単元の目標を確認できるインタラクティブ資料です。">
+<style>
+:root{
+  --bg:#f7f7f5;--panel:#ffffff;--ink:#171717;--muted:#686868;--line:#d8d8d2;
+  --accent:#1f5f54;--accent-soft:#e9f1ef;
+  --energy:#c55a43;--particle:#b28a2b;--life:#4b7d55;--earth:#4b6f98;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif}
+body{margin:0}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{max-width:1500px;margin:0 auto;padding:20px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.title-wrap{min-width:0;flex:1}
+h1{font-size:clamp(22px,3vw,34px);line-height:1.15;margin:0;font-weight:750;letter-spacing:.01em}
+.subtitle{margin-top:6px;color:var(--muted);font-size:13px}
+.icon-btn{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:20px}
+.icon-btn:hover,.icon-btn:focus-visible{border-color:var(--accent);outline:2px solid var(--accent-soft)}
+.controls{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) minmax(220px,2fr);gap:10px;margin-bottom:10px}
+.control{display:flex;flex-direction:column;gap:5px}
+.control label{font-size:12px;color:var(--muted);font-weight:650}
+select,input[type=search]{height:44px;border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:0 12px;outline:none}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.status{min-height:38px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12px;color:var(--muted)}
+.badge.ready{color:var(--accent);border-color:#b9d5ce;background:var(--accent-soft)}
+.hint{font-size:12px;color:var(--muted);margin-left:auto}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.matrix{min-width:1040px}
+.head,.row{display:grid;grid-template-columns:86px repeat(4,minmax(230px,1fr))}
+.head>div,.row>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.head>div:last-child,.row>div:last-child{border-right:0}
+.row:last-child>div{border-bottom:0}
+.corner,.pillar{background:#f1f1ee;padding:10px;text-align:center;font-weight:700}
+.pillar small{display:block;margin-top:3px;font-weight:500;color:var(--muted);font-size:10px}
+.grade{background:#f6f6f3;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:750;padding:10px 5px}
+.cell{padding:8px;min-height:92px;display:flex;flex-direction:column;gap:7px}
+.unit{position:relative;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:8px 9px;line-height:1.35;transition:transform .12s,border-color .12s,box-shadow .12s}
+.unit[data-pillar="エネルギー"]{border-left-color:var(--energy)}
+.unit[data-pillar="粒子"]{border-left-color:var(--particle)}
+.unit[data-pillar="生命"]{border-left-color:var(--life)}
+.unit[data-pillar="地球"]{border-left-color:var(--earth)}
+.unit strong{display:block;font-size:13px}
+.unit small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.unit:hover{transform:translateY(-1px);border-color:#8e8e87;box-shadow:0 3px 10px rgba(0,0,0,.07)}
+.unit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.unit[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:1px;background:#fbfdfc}
+.empty{color:#aaa;font-size:12px;text-align:center;padding:14px 0}
+.detail{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:16px}
+.detail h2{font-size:19px;margin:4px 0 8px}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.65fr);gap:18px}
+.detail-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.detail-text{font-size:13px;line-height:1.8;white-space:pre-line}
+.detail-side{border-left:1px solid var(--line);padding-left:16px}
+.detail-note{font-size:12px;line-height:1.65;color:var(--muted)}
+.popover{position:fixed;z-index:50;width:min(590px,calc(100vw - 24px));max-height:min(70vh,620px);overflow:auto;background:#fff;border:1px solid #bdbdb6;border-radius:12px;box-shadow:0 16px 50px rgba(0,0,0,.18);padding:15px}
+.popover[hidden]{display:none}
+.pop-head{display:flex;gap:10px;align-items:flex-start}
+.pop-meta{font-size:11px;color:var(--muted)}
+.pop-title{font-size:17px;font-weight:750;line-height:1.35;margin-top:2px}
+.pop-close{margin-left:auto;flex:0 0 auto;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:20px}
+.pop-label{font-size:11px;color:var(--muted);font-weight:700;margin-top:12px;margin-bottom:5px}
+.pop-text{font-size:13px;line-height:1.75;white-space:pre-line}
+.modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.34);display:grid;place-items:center;padding:18px}
+.modal[hidden]{display:none}
+.modal-card{width:min(680px,100%);max-height:85vh;overflow:auto;background:#fff;border-radius:14px;padding:18px;border:1px solid var(--line)}
+.modal-head{display:flex;align-items:center;gap:10px}
+.modal-head h2{margin:0;font-size:20px;flex:1}
+.help-list{padding-left:1.3em;line-height:1.8;font-size:14px}
+.source-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:var(--accent);font-weight:700;text-decoration:none}
+.source-link:hover{text-decoration:underline}
+.coming{padding:34px 20px;text-align:center}
+.coming h2{font-size:20px;margin:0 0 10px}
+.coming p{color:var(--muted);line-height:1.7;margin:0}
+footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:14px;padding:0 2px}
+@media(max-width:760px){
+  .app{padding:14px}
+  .controls{grid-template-columns:1fr 1fr}.control.search{grid-column:1/-1}
+  .hint{width:100%;margin-left:0}
+  .detail-grid{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:12px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <div class="title-wrap">
+      <h1>学指導要領の内容構成</h1>
+      <div class="subtitle">学年・領域のつながりと、各単元で身に付ける事項を一覧する</div>
+    </div>
+    <button class="icon-btn" id="helpBtn" type="button" aria-label="ヘルプを開く" title="ヘルプ">?</button>
+  </header>
+
+  <section class="controls" aria-label="表示条件">
+    <div class="control">
+      <label for="school">学校段階</label>
+      <select id="school">
+        <option value="elementary">小学校</option>
+        <option value="middle">中学校</option>
+        <option value="high">高等学校</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="subject">教科</label>
+      <select id="subject">
+        <option value="science">理科</option>
+        <option value="math">算数・数学</option>
+        <option value="techhome">技術・家庭</option>
+      </select>
+    </div>
+    <div class="control search">
+      <label for="search">単元を検索</label>
+      <input id="search" type="search" placeholder="例：電気、植物、天気、てこ…">
+    </div>
+  </section>
+
+  <div class="status">
+    <span class="badge ready" id="dataBadge">小学校・理科</span>
+    <span class="badge" id="countBadge"></span>
+    <span class="hint">マウスオーバー：目標を表示　／　クリック・タップ：固定表示</span>
+  </div>
+
+  <section id="content"></section>
+
+  <footer>
+    <span>Source: 文部科学省 学習指導要領</span>
+    <span>Science Communication Design Laboratory, Kagawa University</span>
+  </footer>
+</main>
+
+<div class="popover" id="popover" hidden aria-live="polite">
+  <div class="pop-head">
+    <div>
+      <div class="pop-meta" id="popMeta"></div>
+      <div class="pop-title" id="popTitle"></div>
+    </div>
+    <button class="pop-close" id="popClose" type="button" aria-label="閉じる">×</button>
+  </div>
+  <div class="pop-label">学習指導要領の該当記述</div>
+  <div class="pop-text" id="popText"></div>
+</div>
+
+<div class="modal" id="helpModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-head">
+      <h2 id="helpTitle">このアプリについて</h2>
+      <button class="icon-btn" id="helpClose" type="button" aria-label="ヘルプを閉じる">×</button>
+    </div>
+    <ul class="help-list">
+      <li>学習指導要領の内容を、学年と「エネルギー・粒子・生命・地球」の系統で一覧できます。</li>
+      <li>各単元にマウスを置くと、その単元で身に付ける事項（知識・技能、思考力・判断力・表現力等）をポップアップ表示します。</li>
+      <li>単元をクリック／タップすると詳細を固定表示できます。</li>
+      <li>学校段階と教科を切り替えられる構造にしてあり、中学校・高等学校、算数・数学、技術・家庭を順次追加できます。</li>
+      <li>現在は「小学校・理科」を収録しています。</li>
+    </ul>
+    <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387014.htm" target="_blank" rel="noopener noreferrer">文部科学省「学習指導要領」ページ ↗</a>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {g:"小3",p:"粒子",s:"粒子の保存性",t:"物と重さ",pg:"31",o:`物の性質について，形や体積に着目して，重さを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 物は，形が変わっても重さは変わらないこと。
+(ｲ) 物は，体積が同じでも重さは違うことがあること。
+イ　物の形や体積と重さとの関係について追究する中で，差異点や共通点を基に，物の性質についての問題を見いだし，表現すること。`},
+  {g:"小3",p:"エネルギー",s:"エネルギーの捉え方",t:"風とゴムの力の働き",pg:"32",o:`風とゴムの力の働きについて，力と物の動く様子に着目して，それらを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 風の力は，物を動かすことができること。また，風の力の大きさを変えると，物が動く様子も変わること。
+(ｲ) ゴムの力は，物を動かすことができること。また，ゴムの力の大きさを変えると，物が動く様子も変わること。
+イ　風とゴムの力で物が動く様子について追究する中で，差異点や共通点を基に，風とゴムの力の働きについての問題を見いだし，表現すること。`},
+  {g:"小3",p:"エネルギー",s:"エネルギーの捉え方",t:"光と音の性質",pg:"33",o:`光と音の性質について，光を当てたときの明るさや暖かさ，音を出したときの震え方に着目して，光の強さや音の大きさを変えたときの違いを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 日光は直進し，集めたり反射させたりできること。
+(ｲ) 物に日光を当てると，物の明るさや暖かさが変わること。
+(ｳ) 物から音が出たり伝わったりするとき，物は震えていること。また，音の大きさが変わるとき物の震え方が変わること。
+イ　光を当てたときの明るさや暖かさの様子，音を出したときの震え方の様子について追究する中で，差異点や共通点を基に，光と音の性質についての問題を見いだし，表現すること。`},
+  {g:"小3",p:"エネルギー",s:"エネルギーの変換と保存",t:"磁石の性質",pg:"35",o:`磁石の性質について，磁石を身の回りの物に近付けたときの様子に着目して，それらを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 磁石に引き付けられる物と引き付けられない物があること。また，磁石に近付けると磁石になる物があること。
+(ｲ) 磁石の異極は引き合い，同極は退け合うこと。
+イ　磁石を身の回りの物に近付けたときの様子について追究する中で，差異点や共通点を基に，磁石の性質についての問題を見いだし，表現すること。`},
+  {g:"小3",p:"エネルギー",s:"エネルギーの変換と保存",t:"電気の通り道",pg:"37",o:`電気の回路について，乾電池と豆電球などのつなぎ方と乾電池につないだ物の様子に着目して，電気を通すときと通さないときのつなぎ方を比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 電気を通すつなぎ方と通さないつなぎ方があること。
+(ｲ) 電気を通す物と通さない物があること。
+イ　乾電池と豆電球などのつなぎ方と乾電池につないだ物の様子について追究する中で，差異点や共通点を基に，電気の回路についての問題を見いだし，表現すること。`},
+  {g:"小3",p:"生命",s:"生物の構造と機能",t:"身の回りの生物",pg:"39",o:`身の回りの生物について，探したり育てたりする中で，それらの様子や周辺の環境，成長の過程や体のつくりに着目して，それらを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 生物は，色，形，大きさなど，姿に違いがあること。また，周辺の環境と関わって生きていること。
+(ｲ) 昆虫の育ち方には一定の順序があること。また，成虫の体は頭，胸及び腹からできていること。
+(ｳ) 植物の育ち方には一定の順序があること。また，その体は根，茎及び葉からできていること。
+イ　身の回りの生物の様子について追究する中で，差異点や共通点を基に，身の回りの生物と環境との関わり，昆虫や植物の成長のきまりや体のつくりについての問題を見いだし，表現すること。`},
+  {g:"小3",p:"地球",s:"地球の大気と水の循環",t:"太陽と地面の様子",pg:"42",o:`太陽と地面の様子との関係について，日なたと日陰の様子に着目して，それらを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 日陰は太陽の光を遮るとでき，日陰の位置は太陽の位置の変化によって変わること。
+(ｲ) 地面は太陽によって暖められ，日なたと日陰では地面の暖かさや湿り気に違いがあること。
+イ　日なたと日陰の様子について追究する中で，差異点や共通点を基に，太陽と地面の様子との関係についての問題を見いだし，表現すること。`},
+
+  {g:"小4",p:"粒子",s:"粒子の存在",t:"空気と水の性質",pg:"47",o:`空気と水の性質について，体積や圧し返す力の変化に着目して，それらと圧す力とを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 閉じ込めた空気を圧すと，体積は小さくなるが，圧し返す力は大きくなること。
+(ｲ) 閉じ込めた空気は圧し縮められるが，水は圧し縮められないこと。
+イ　空気と水の性質について追究する中で，既習の内容や生活経験を基に，空気と水の体積や圧し返す力の変化と圧す力との関係について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"粒子",s:"粒子のもつエネルギー",t:"金属，水，空気と温度",pg:"48",o:`金属，水及び空気の性質について，体積や状態の変化，熱の伝わり方に着目して，それらと温度の変化とを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 金属，水及び空気は，温めたり冷やしたりすると，それらの体積が変わるが，その程度には違いがあること。
+(ｲ) 金属は熱せられた部分から順に温まるが，水や空気は熱せられた部分が移動して全体が温まること。
+(ｳ) 水は，温度によって水蒸気や氷に変わること。また，水が氷になると体積が増えること。
+イ　金属，水及び空気の性質について追究する中で，既習の内容や生活経験を基に，金属，水及び空気の温度を変化させたときの体積や状態の変化，熱の伝わり方について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"エネルギー",s:"エネルギーの変換と保存",t:"電流の働き",pg:"50",o:`電流の働きについて，電流の大きさや向きと乾電池につないだ物の様子に着目して，それらを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 乾電池の数やつなぎ方を変えると，電流の大きさや向きが変わり，豆電球の明るさやモーターの回り方が変わること。
+イ　電流の働きについて追究する中で，既習の内容や生活経験を基に，電流の大きさや向きと乾電池につないだ物の様子との関係について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"生命",s:"生物の構造と機能",t:"人の体のつくりと運動",pg:"52",o:`人や他の動物について，骨や筋肉のつくりと働きに着目して，それらを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 人の体には骨と筋肉があること。
+(ｲ) 人が体を動かすことができるのは，骨，筋肉の働きによること。
+イ　人や他の動物について追究する中で，既習の内容や生活経験を基に，人や他の動物の骨や筋肉のつくりと働きについて，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"生命",s:"生命の連続性",t:"季節と生物",pg:"54",o:`身近な動物や植物について，探したり育てたりする中で，動物の活動や植物の成長と季節の変化に着目して，それらを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 動物の活動は，暖かい季節，寒い季節などによって違いがあること。
+(ｲ) 植物の成長は，暖かい季節，寒い季節などによって違いがあること。
+イ　身近な動物や植物について追究する中で，既習の内容や生活経験を基に，季節ごとの動物の活動や植物の成長の変化について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"地球",s:"地球の内部と地表面の変動",t:"雨水の行方と地面の様子",pg:"56",o:`雨水の行方と地面の様子について，流れ方やしみ込み方に着目して，それらと地面の傾きや土の粒の大きさとを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 水は，高い場所から低い場所へと流れて集まること。
+(ｲ) 水のしみ込み方は，土の粒の大きさによって違いがあること。
+イ　雨水の行方と地面の様子について追究する中で，既習の内容や生活経験を基に，雨水の流れ方やしみ込み方と地面の傾きや土の粒の大きさとの関係について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"地球",s:"地球の大気と水の循環",t:"天気の様子",pg:"57",o:`天気や自然界の水の様子について，気温や水の行方に着目して，それらと天気の様子や水の状態変化とを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 天気によって１日の気温の変化の仕方に違いがあること。
+(ｲ) 水は，水面や地面などから蒸発し，水蒸気になって空気中に含まれていくこと。また，空気中の水蒸気は，結露して再び水になって現れることがあること。
+イ　天気や自然界の水の様子について追究する中で，既習の内容や生活経験を基に，天気の様子や水の状態変化と気温や水の行方との関係について，根拠のある予想や仮説を発想し，表現すること。`},
+  {g:"小4",p:"地球",s:"地球と天体の運動",t:"月と星",pg:"59",o:`月や星の特徴について，位置の変化や時間の経過に着目して，それらを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 月は日によって形が変わって見え，１日のうちでも時刻によって位置が変わること。
+(ｲ) 空には，明るさや色の違う星があること。
+(ｳ) 星の集まりは，１日のうちでも時刻によって，並び方は変わらないが，位置が変わること。
+イ　月や星の特徴について追究する中で，既習の内容や生活経験を基に，月や星の位置の変化と時間の経過との関係について，根拠のある予想や仮説を発想し，表現すること。`},
+
+  {g:"小5",p:"粒子",s:"粒子の保存性",t:"物の溶け方",pg:"63",o:`物の溶け方について，溶ける量や様子に着目して，水の温度や量などの条件を制御しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 物が水に溶けても，水と物とを合わせた重さは変わらないこと。
+(ｲ) 物が水に溶ける量には，限度があること。
+(ｳ) 物が水に溶ける量は水の温度や量，溶ける物によって違うこと。また，この性質を利用して，溶けている物を取り出すことができること。
+イ　物の溶け方について追究する中で，物の溶け方の規則性についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"エネルギー",s:"エネルギーの捉え方",t:"振り子の運動",pg:"65",o:`振り子の運動の規則性について，振り子が１往復する時間に着目して，おもりの重さや振り子の長さなどの条件を制御しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 振り子が１往復する時間は，おもりの重さなどによっては変わらないが，振り子の長さによって変わること。
+イ　振り子の運動の規則性について追究する中で，振り子が１往復する時間に関係する条件についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"エネルギー",s:"エネルギーの変換と保存",t:"電流がつくる磁力",pg:"66",o:`電流がつくる磁力について，電流の大きさや向き，コイルの巻数などに着目して，それらの条件を制御しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 電流の流れているコイルは，鉄心を磁化する働きがあり，電流の向きが変わると，電磁石の極も変わること。
+(ｲ) 電磁石の強さは，電流の大きさや導線の巻数によって変わること。
+イ　電流がつくる磁力について追究する中で，電流がつくる磁力の強さに関係する条件についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"生命",s:"生命の連続性",t:"植物の発芽，成長，結実",pg:"67",o:`植物の育ち方について，発芽，成長及び結実の様子に着目して，それらに関わる条件を制御しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 植物は，種子の中の養分を基にして発芽すること。
+(ｲ) 植物の発芽には，水，空気及び温度が関係していること。
+(ｳ) 植物の成長には，日光や肥料などが関係していること。
+(ｴ) 花にはおしべやめしべなどがあり，花粉がめしべの先に付くとめしべのもとが実になり，実の中に種子ができること。
+イ　植物の育ち方について追究する中で，植物の発芽，成長及び結実とそれらに関わる条件についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"生命",s:"生命の連続性",t:"動物の誕生",pg:"70",o:`動物の発生や成長について，魚を育てたり人の発生についての資料を活用したりする中で，卵や胎児の様子に着目して，時間の経過と関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 魚には雌雄があり，生まれた卵は日がたつにつれて中の様子が変化してかえること。
+(ｲ) 人は，母体内で成長して生まれること。
+イ　動物の発生や成長について追究する中で，動物の発生や成長の様子と経過についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"地球",s:"地球の内部と地表面の変動",t:"流れる水の働きと土地の変化",pg:"71",o:`流れる水の働きと土地の変化について，水の速さや量に着目して，それらの条件を制御しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 流れる水には，土地を侵食したり，石や土などを運搬したり堆積させたりする働きがあること。
+(ｲ) 川の上流と下流によって，川原の石の大きさや形に違いがあること。
+(ｳ) 雨の降り方によって，流れる水の速さや量は変わり，増水により土地の様子が大きく変化する場合があること。
+イ　流れる水の働きについて追究する中で，流れる水の働きと土地の変化との関係についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+  {g:"小5",p:"地球",s:"地球の大気と水の循環",t:"天気の変化",pg:"73",o:`天気の変化の仕方について，雲の様子を観測したり，映像などの気象情報を活用したりする中で，雲の量や動きに着目して，それらと天気の変化とを関係付けて調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 天気の変化は，雲の量や動きと関係があること。
+(ｲ) 天気の変化は，映像などの気象情報を用いて予想できること。
+イ　天気の変化の仕方について追究する中で，天気の変化の仕方と雲の量や動きとの関係についての予想や仮説を基に，解決の方法を発想し，表現すること。`},
+
+  {g:"小6",p:"粒子",s:"粒子の結合",t:"燃焼の仕組み",pg:"77",o:`燃焼の仕組みについて，空気の変化に着目して，物の燃え方を多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 植物体が燃えるときには，空気中の酸素が使われて二酸化炭素ができること。
+イ　燃焼の仕組みについて追究する中で，物が燃えたときの空気の変化について，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"粒子",s:"粒子の結合",t:"水溶液の性質",pg:"78",o:`水溶液について，溶けている物に着目して，それらによる水溶液の性質や働きの違いを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 水溶液には，酸性，アルカリ性及び中性のものがあること。
+(ｲ) 水溶液には，気体が溶けているものがあること。
+(ｳ) 水溶液には，金属を変化させるものがあること。
+イ　水溶液の性質や働きについて追究する中で，溶けているものによる性質や働きの違いについて，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"エネルギー",s:"エネルギーの捉え方",t:"てこの規則性",pg:"80",o:`てこの規則性について，力を加える位置や力の大きさに着目して，てこの働きを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 力を加える位置や力の大きさを変えると，てこを傾ける働きが変わり，てこがつり合うときにはそれらの間に規則性があること。
+(ｲ) 身の回りには，てこの規則性を利用した道具があること。
+イ　てこの規則性について追究する中で，力を加える位置や力の大きさとてこの働きとの関係について，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"エネルギー",s:"エネルギーの変換と保存",t:"電気の利用",pg:"82",o:`発電や蓄電，電気の変換について，電気の量や働きに着目して，それらを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 電気は，つくりだしたり蓄えたりすることができること。
+(ｲ) 電気は，光，音，熱，運動などに変換することができること。
+(ｳ) 身の回りには，電気の性質や働きを利用した道具があること。
+イ　電気の性質や働きについて追究する中で，電気の量と働きとの関係，発電や蓄電，電気の変換について，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"生命",s:"生物の構造と機能",t:"人の体のつくりと働き",pg:"84",o:`人や他の動物について，体のつくりと呼吸，消化，排出及び循環の働きに着目して，生命を維持する働きを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 体内に酸素が取り入れられ，体外に二酸化炭素などが出されていること。
+(ｲ) 食べ物は，口，胃，腸などを通る間に消化，吸収され，吸収されなかった物は排出されること。
+(ｳ) 血液は，心臓の働きで体内を巡り，養分，酸素及び二酸化炭素などを運んでいること。
+(ｴ) 体内には，生命活動を維持するための様々な臓器があること。
+イ　人や他の動物の体のつくりと働きについて追究する中で，体のつくりと呼吸，消化，排出及び循環の働きについて，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"生命",s:"生物の構造と機能",t:"植物の養分と水の通り道",pg:"86",o:`植物について，その体のつくり，体内の水などの行方及び葉で養分をつくる働きに着目して，生命を維持する働きを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 植物の葉に日光が当たるとでんぷんができること。
+(ｲ) 根，茎及び葉には，水の通り道があり，根から吸い上げられた水は主に葉から蒸散により排出されること。
+イ　植物の体のつくりと働きについて追究する中で，体のつくり，体内の水などの行方及び葉で養分をつくる働きについて，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"生命",s:"生物と環境の関わり",t:"生物と環境",pg:"87",o:`生物と環境について，動物や植物の生活を観察したり資料を活用したりする中で，生物と環境との関わりに着目して，それらを多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 生物は，水及び空気を通して周囲の環境と関わって生きていること。
+(ｲ) 生物の間には，食う食われるという関係があること。
+(ｳ) 人は，環境と関わり，工夫して生活していること。
+イ　生物と環境について追究する中で，生物と環境との関わりについて，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"地球",s:"地球の内部と地表面の変動",t:"土地のつくりと変化",pg:"89",o:`土地のつくりと変化について，土地やその中に含まれる物に着目して，土地のつくりやでき方を多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 土地は，礫，砂，泥，火山灰などからできており，層をつくって広がっているものがあること。また，層には化石が含まれているものがあること。
+(ｲ) 地層は，流れる水の働きや火山の噴火によってできること。
+(ｳ) 土地は，火山の噴火や地震によって変化すること。
+イ　土地のつくりと変化について追究する中で，土地のつくりやでき方について，より妥当な考えをつくりだし，表現すること。`},
+  {g:"小6",p:"地球",s:"地球と天体の運動",t:"月と太陽",pg:"92",o:`月の形の見え方について，月と太陽の位置に着目して，それらの位置関係を多面的に調べる活動を通して，次の事項を身に付けることができるよう指導する。
+ア　次のことを理解するとともに，観察，実験などに関する技能を身に付けること。
+(ｱ) 月の輝いている側に太陽があること。また，月の形の見え方は，太陽と月との位置関係によって変わること。
+イ　月の形の見え方について追究する中で，月の位置や形と太陽の位置との関係について，より妥当な考えをつくりだし，表現すること。`}
+];
+
+const pillars=["エネルギー","粒子","生命","地球"];
+const views={エネルギー:"量的・関係的",粒子:"質的・実体的",生命:"共通性・多様性",地球:"時間的・空間的"};
+const grades=["小3","小4","小5","小6"];
+const school=document.getElementById("school");
+const subject=document.getElementById("subject");
+const search=document.getElementById("search");
+const content=document.getElementById("content");
+const dataBadge=document.getElementById("dataBadge");
+const countBadge=document.getElementById("countBadge");
+const pop=document.getElementById("popover");
+const popMeta=document.getElementById("popMeta");
+const popTitle=document.getElementById("popTitle");
+const popText=document.getElementById("popText");
+const popClose=document.getElementById("popClose");
+let pinned=null, hideTimer=null;
+
+function schoolName(v){return v==="elementary"?"小学校":v==="middle"?"中学校":"高等学校"}
+function subjectName(v){return v==="science"?"理科":v==="math"?"算数・数学":"技術・家庭"}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function isReady(){return school.value==="elementary" && subject.value==="science"}
+
+function render(){
+  pinned=null; pop.hidden=true;
+  dataBadge.textContent=schoolName(school.value)+"・"+subjectName(subject.value);
+  dataBadge.classList.toggle("ready",isReady());
+  if(!isReady()){
+    countBadge.textContent="準備中";
+    content.innerHTML=`<div class="table-wrap"><div class="coming"><h2>${esc(schoolName(school.value))}・${esc(subjectName(subject.value))}</h2><p>この区分の内容構成は追加準備中です。<br>同じUIで単元・系統・目標を表示できるよう、選択肢を先に用意しています。</p></div></div>`;
+    return;
+  }
+  const term=search.value.trim().toLowerCase();
+  const filtered=DATA.filter(u=>!term || (u.t+" "+u.s+" "+u.o).toLowerCase().includes(term));
+  countBadge.textContent=filtered.length+" 単元";
+  let html='<div class="table-wrap"><div class="matrix">';
+  html+='<div class="head"><div class="corner">学年</div>'+pillars.map(p=>`<div class="pillar">${p}<small>${views[p]}の視点</small></div>`).join("")+'</div>';
+  for(const g of grades){
+    html+='<div class="row"><div class="grade">小学校<br>'+g.slice(1)+'年</div>';
+    for(const p of pillars){
+      const arr=filtered.map((u,i)=>({u,idx:DATA.indexOf(u)})).filter(x=>x.u.g===g&&x.u.p===p);
+      html+='<div class="cell">'+(arr.length?arr.map(({u,idx})=>`<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false"><strong>${esc(u.t)}</strong><small>${esc(u.s)}</small></button>`).join(""):'<div class="empty">—</div>')+'</div>';
+    }
+    html+='</div>';
+  }
+  html+='</div></div><div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
+  content.innerHTML=html;
+  document.querySelectorAll(".unit").forEach(btn=>{
+    const i=Number(btn.dataset.i);
+    btn.addEventListener("mouseenter",e=>showPopover(i,e.currentTarget));
+    btn.addEventListener("mousemove",e=>positionPopover(e.clientX,e.clientY));
+    btn.addEventListener("mouseleave",scheduleHide);
+    btn.addEventListener("focus",e=>showPopover(i,e.currentTarget,true));
+    btn.addEventListener("blur",scheduleHide);
+    btn.addEventListener("click",()=>pinUnit(i,btn));
+  });
+}
+function positionPopover(x,y){
+  const pad=12, w=pop.offsetWidth||590, h=Math.min(pop.offsetHeight||420,window.innerHeight*.7);
+  let left=x+16, top=y+16;
+  if(left+w>window.innerWidth-pad) left=x-w-16;
+  if(top+h>window.innerHeight-pad) top=Math.max(pad,window.innerHeight-h-pad);
+  pop.style.left=Math.max(pad,left)+"px";
+  pop.style.top=Math.max(pad,top)+"px";
+}
+function showPopover(i,btn,fromFocus=false){
+  clearTimeout(hideTimer);
+  const u=DATA[i];
+  popMeta.textContent="小学校 "+u.g.slice(1)+"年 ｜ "+u.p+" ｜ "+u.s+" ｜ 解説 p."+u.pg;
+  popTitle.textContent=u.t;
+  popText.textContent=u.o;
+  pop.hidden=false;
+  if(fromFocus){
+    const r=btn.getBoundingClientRect();
+    positionPopover(r.right,r.top);
+  }
+}
+function scheduleHide(){if(pinned!==null)return;clearTimeout(hideTimer);hideTimer=setTimeout(()=>pop.hidden=true,120)}
+function pinUnit(i,btn){
+  pinned=i;
+  document.querySelectorAll(".unit").forEach(b=>b.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  const u=DATA[i];
+  showPopover(i,btn,true);
+  const detail=document.getElementById("detail");
+  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)}</h2><div class="detail-text">${esc(u.o)}</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：解説 p.${esc(u.pg)}</div></aside></div>`;
+}
+function clearPin(){
+  pinned=null;pop.hidden=true;
+  document.querySelectorAll(".unit").forEach(b=>b.setAttribute("aria-pressed","false"));
+}
+school.addEventListener("change",render);
+subject.addEventListener("change",render);
+search.addEventListener("input",render);
+pop.addEventListener("mouseenter",()=>clearTimeout(hideTimer));
+pop.addEventListener("mouseleave",scheduleHide);
+popClose.addEventListener("click",clearPin);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){clearPin();document.getElementById("helpModal").hidden=true}});
+
+const helpModal=document.getElementById("helpModal");
+document.getElementById("helpBtn").addEventListener("click",()=>helpModal.hidden=false);
+document.getElementById("helpClose").addEventListener("click",()=>helpModal.hidden=true);
+helpModal.addEventListener("click",e=>{if(e.target===helpModal)helpModal.hidden=true});
+
+render();
+</script>
+</body>
+</html>
