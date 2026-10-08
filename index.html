@@ -207,18 +207,21 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
       <li>国立教育政策研究所『「指導と評価の一体化」のための学習評価に関する参考資料【小学校理科】』も対応付けています。表で「事例」と表示した単元は、第3編「単元ごとの学習評価について（事例）」の該当事例へ直接移動できます。</li>
       <li>小学校理科の全31単元について、同資料の巻末資料「2 内容のまとまりごとの評価規準（例）」が収録されています。そのため評価資料の有無を示す個別マークは付けず、全単元のポップアップ内に「知識・技能」「思考・判断・表現」「主体的に学習に取り組む態度」の3観点を直接表示しています。</li>
       <li>単元をクリック／タップすると詳細を固定表示できます。</li>
-      <li>学校段階と教科を切り替えられる構造にしてあり、中学校・高等学校、算数・数学、技術・家庭を順次追加できます。</li>
-      <li>現在は「小学校・理科」を収録しています。</li>
+      <li>学校段階と教科を切り替えられます。現在は「小学校・理科」と「中学校・理科」を収録し、高等学校、算数・数学、技術・家庭は順次追加予定です。</li>
+      <li>中学校理科では、第1学年は内容（1）（2）、第2学年は（3）（4）、第3学年は（5）〜（7）として学習指導要領の配当どおりに表示しています。</li>
     </ul>
     <div class="help-sources">
-      <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387014.htm" target="_blank" rel="noopener noreferrer">文部科学省「学習指導要領」ページ ↗</a>
+      <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387014.htm" target="_blank" rel="noopener noreferrer">文部科学省・小学校学習指導要領 ↗</a>
+      <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387016.htm" target="_blank" rel="noopener noreferrer">文部科学省・中学校学習指導要領 ↗</a>
       <a class="source-link" href="https://www.nier.go.jp/kaihatsu/shidousiryou.html" target="_blank" rel="noopener noreferrer">国立教育政策研究所「指導資料・事例集」 ↗</a>
-      <a class="source-link" href="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_pri_rika.pdf#page=87" target="_blank" rel="noopener noreferrer">小学校理科「評価規準（例）」巻末資料 ↗</a>
+      <a class="source-link" href="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_pri_rika.pdf#page=87" target="_blank" rel="noopener noreferrer">小学校理科・巻末資料 ↗</a>
+      <a class="source-link" href="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_mid_rika.pdf#page=110" target="_blank" rel="noopener noreferrer">中学校理科・中項目ごとの評価規準 ↗</a>
     </div>
   </div>
 </div>
 
 <script src="evaluation-data.js"></script>
+<script src="middle-data.js"></script>
 <script>
 const DATA = [
   {g:"小3",p:"粒子",s:"粒子の保存性",t:"物と重さ",pg:"31",o:`物の性質について，形や体積に着目して，重さを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
@@ -393,7 +396,6 @@ const DATA = [
 
 const pillars=["エネルギー","粒子","生命","地球"];
 const views={エネルギー:"量的・関係的",粒子:"質的・実体的",生命:"共通性・多様性",地球:"時間的・空間的"};
-const grades=["小3","小4","小5","小6"];
 const school=document.getElementById("school");
 const subject=document.getElementById("subject");
 const search=document.getElementById("search");
@@ -409,9 +411,11 @@ const popCriteria=document.getElementById("popCriteria");
 const popNierLinks=document.getElementById("popNierLinks");
 const popClose=document.getElementById("popClose");
 const MEXT_PDF="https://www.mext.go.jp/content/20211020-mxt_kyoiku02-100002607_05.pdf";
+const MIDDLE_MEXT_PDF="https://www.mext.go.jp/content/20260730-mxt_kyoiku01-100002608_05.pdf";
 const NIER_PDF="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_pri_rika.pdf";
-const pdfUrl=(u)=>MEXT_PDF+"#page="+(Number(u.pg)+5);
-const nierUrl=(page)=>NIER_PDF+"#page="+page;
+const MIDDLE_NIER_PDF="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_mid_rika.pdf";
+const elementaryPdfUrl=(u)=>MEXT_PDF+"#page="+(Number(u.pg)+5);
+const middlePdfUrl=(u)=>MIDDLE_MEXT_PDF+"#page="+u.mextPage;
 const NIER_CASES={
   "太陽と地面の様子":{no:1,page:52,keyword:"指導と評価の計画から評価の総括まで"},
   "電流の働き":{no:2,page:60,keyword:"「知識・技能」の評価"},
@@ -456,10 +460,19 @@ let pinned=null, hideTimer=null;
 function schoolName(v){return v==="elementary"?"小学校":v==="middle"?"中学校":"高等学校"}
 function subjectName(v){return v==="science"?"理科":v==="math"?"算数・数学":"技術・家庭"}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-function isReady(){return school.value==="elementary" && subject.value==="science"}
+function isReady(){return subject.value==="science" && (school.value==="elementary"||school.value==="middle")}
+function currentData(){return school.value==="middle"?(window.MIDDLE_DATA||[]):DATA}
+function currentGrades(){return school.value==="middle"?["中1","中2","中3"]:["小3","小4","小5","小6"]}
+function currentCases(){return school.value==="middle"?(window.MIDDLE_CASES||{}):NIER_CASES}
+function currentCriteria(u){return school.value==="middle"?window.MIDDLE_NIER_CRITERIA?.[u.field+"|"+u.t]:window.NIER_CRITERIA?.[u.t]}
+function currentEvalPage(u){return school.value==="middle"?u.evalPage:NIER_EVAL_PAGES[u.t]}
+function currentNierPdf(){return school.value==="middle"?MIDDLE_NIER_PDF:NIER_PDF}
+function currentMextPdfUrl(u){return school.value==="middle"?middlePdfUrl(u):elementaryPdfUrl(u)}
+function currentMextPageLabel(u){return school.value==="middle"?String(u.mextPage-7):u.pg}
+function currentMextSource(){return school.value==="middle"?"中学校学習指導要領解説 理科編":"小学校学習指導要領解説 理科編"}
 function criteriaHtml(u){
-  const c=window.NIER_CRITERIA?.[u.t];
-  const ep=NIER_EVAL_PAGES[u.t];
+  const c=currentCriteria(u);
+  const ep=currentEvalPage(u);
   if(!c) return "";
   const list=(items)=>`<ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
   return `<div class="eval-title-row"><div class="pop-label">内容のまとまりごとの評価規準（例）</div><div class="eval-page">国立教育政策研究所・巻末資料2 / PDF p.${ep}</div></div>
@@ -474,10 +487,11 @@ function nierLinksHtml(u){
   const c=NIER_CASES[u.t];
   const ep=NIER_EVAL_PAGES[u.t];
   if(c){
-    links.push(`<a class="pdf-link case-link" href="${nierUrl(c.page)}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">第3編・事例${c.no}</span>${esc(c.keyword)}</span><span>PDF p.${c.page} ↗</span></a>`);
+    links.push(`<a class="pdf-link case-link" href="${currentNierPdf()}#page=${c.page}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">第3編・事例${c.no}</span>${esc(c.keyword)}</span><span>PDF p.${c.page} ↗</span></a>`);
   }
   if(ep){
-    links.push(`<a class="pdf-link" href="${nierUrl(ep)}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">巻末資料 2</span>この単元の「内容のまとまりごとの評価規準（例）」</span><span>PDF p.${ep} ↗</span></a>`);
+    const label=school.value==="middle"?"中項目ごとの評価規準（例）":"内容のまとまりごとの評価規準（例）";
+    links.push(`<a class="pdf-link" href="${currentNierPdf()}#page=${ep}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">巻末資料</span>この単元の「${label}」</span><span>PDF p.${ep} ↗</span></a>`);
   }
   return links.join("");
 }
@@ -492,15 +506,18 @@ function render(){
     return;
   }
   const term=search.value.trim().toLowerCase();
-  const filtered=DATA.filter(u=>!term || (u.t+" "+u.s+" "+u.o).toLowerCase().includes(term));
+  const activeData=currentData();
+  const grades=currentGrades();
+  const filtered=activeData.filter(u=>!term || (u.t+" "+u.s+" "+u.o).toLowerCase().includes(term));
   countBadge.textContent=filtered.length+" 単元";
   let html='<div class="table-wrap"><div class="matrix">';
   html+='<div class="head"><div class="corner">学年</div>'+pillars.map(p=>`<div class="pillar">${p}<small>${views[p]}の視点</small></div>`).join("")+'</div>';
   for(const g of grades){
-    html+='<div class="row"><div class="grade">小学校<br>'+g.slice(1)+'年</div>';
+    html+='<div class="row"><div class="grade">'+schoolName(school.value)+'<br>'+g.slice(1)+'年</div>';
     for(const p of pillars){
-      const arr=filtered.map((u,i)=>({u,idx:DATA.indexOf(u)})).filter(x=>x.u.g===g&&x.u.p===p);
-      html+='<div class="cell">'+(arr.length?arr.map(({u,idx})=>`<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false"><span class="unit-title-row"><strong>${esc(u.t)}</strong>${NIER_CASES[u.t]?'<span class="case-mark" title="国立教育政策研究所の学習評価事例あり">事例</span>':''}</span><small>${esc(u.s)}</small></button>`).join(""):'<div class="empty">—</div>')+'</div>';
+      const arr=filtered.map(u=>({u,idx:activeData.indexOf(u)})).filter(x=>x.u.g===g&&x.u.p===p);
+      const cases=currentCases();
+      html+='<div class="cell">'+(arr.length?arr.map(({u,idx})=>`<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false"><span class="unit-title-row"><strong>${esc(u.t)}</strong>${cases[u.t]?'<span class="case-mark" title="国立教育政策研究所の学習評価事例あり">事例</span>':''}</span><small>${esc(u.s)}</small></button>`).join(""):'<div class="empty">—</div>')+'</div>';
     }
     html+='</div>';
   }
@@ -526,12 +543,12 @@ function positionPopover(x,y){
 }
 function showPopover(i,btn,fromFocus=false){
   clearTimeout(hideTimer);
-  const u=DATA[i];
-  popMeta.textContent="小学校 "+u.g.slice(1)+"年 ｜ "+u.p+" ｜ "+u.s+" ｜ 解説 p."+u.pg;
+  const u=currentData()[i];
+  popMeta.textContent=schoolName(school.value)+" "+u.g.slice(1)+"年 ｜ "+u.p+" ｜ "+u.s+" ｜ 解説 p."+currentMextPageLabel(u);
   popTitle.textContent=u.t;
   popText.textContent=u.o;
-  popPdf.href=pdfUrl(u);
-  popPdf.textContent="解説本文（「本内容は…」）をPDFで開く（解説 p."+u.pg+"） ↗";
+  popPdf.href=currentMextPdfUrl(u);
+  popPdf.textContent="解説本文をPDFで開く（解説 p."+currentMextPageLabel(u)+"） ↗";
   popCriteria.innerHTML=criteriaHtml(u);
   popNierLinks.innerHTML=nierLinksHtml(u);
   pop.hidden=false;
@@ -545,11 +562,11 @@ function pinUnit(i,btn){
   pinned=i;
   document.querySelectorAll(".unit").forEach(b=>b.setAttribute("aria-pressed","false"));
   btn.setAttribute("aria-pressed","true");
-  const u=DATA[i];
+  const u=currentData()[i];
   showPopover(i,btn,true);
   const detail=document.getElementById("detail");
-  const c=NIER_CASES[u.t];
-  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)} ${c?'<span class="case-mark">事例</span>':''}</h2><div class="detail-text">${esc(u.o)}</div><a class="pdf-link" href="${pdfUrl(u)}" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く（解説 p.${esc(u.pg)}） ↗</a><div class="pdf-note">（ア）（イ）など各小項目の具体的な解説へ続く該当ページを開きます。</div>${criteriaHtml(u)}<div class="resource-links" style="margin-top:10px">${nierLinksHtml(u)}</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：学習指導要領解説 p.${esc(u.pg)}<br>評価規準：国立教育政策研究所 巻末資料2${c?'<br><br>学習評価事例：事例'+c.no:''}</div></aside></div>`;
+  const c=currentCases()[u.t];
+  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)} ${c?'<span class="case-mark">事例</span>':''}</h2><div class="detail-text">${esc(u.o)}</div><a class="pdf-link" href="${currentMextPdfUrl(u)}" target="_blank" rel="noopener noreferrer">解説本文をPDFで開く（解説 p.${esc(currentMextPageLabel(u))}） ↗</a><div class="pdf-note">学習指導要領解説の該当箇所を開きます。</div>${criteriaHtml(u)}<div class="resource-links" style="margin-top:10px">${nierLinksHtml(u)}</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">${schoolName(school.value)} ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：${currentMextSource()} p.${esc(currentMextPageLabel(u))}<br>評価規準：国立教育政策研究所 巻末資料${c?'<br><br>学習評価事例：事例'+c.no:''}</div></aside></div>`;
 }
 function clearPin(){
   pinned=null;pop.hidden=true;
