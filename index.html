@@ -475,7 +475,8 @@ function criteriaHtml(u){
   const ep=currentEvalPage(u);
   if(!c) return "";
   const list=(items)=>`<ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
-  return `<div class="eval-title-row"><div class="pop-label">内容のまとまりごとの評価規準（例）</div><div class="eval-page">国立教育政策研究所・巻末資料2 / PDF p.${ep}</div></div>
+  const evalLabel=school.value==="middle"?"中項目ごとの評価規準（例）":"内容のまとまりごとの評価規準（例）";
+  return `<div class="eval-title-row"><div class="pop-label">${evalLabel}</div><div class="eval-page">国立教育政策研究所・巻末資料 / PDF p.${ep}</div></div>
   <div class="eval-grid">
     <section class="eval-card knowledge"><div class="eval-head">知識・技能</div><div class="eval-body">${list(c.k)}</div></section>
     <section class="eval-card thinking"><div class="eval-head">思考・判断・表現</div><div class="eval-body">${list(c.t)}</div></section>
@@ -484,8 +485,8 @@ function criteriaHtml(u){
 }
 function nierLinksHtml(u){
   const links=[];
-  const c=NIER_CASES[u.t];
-  const ep=NIER_EVAL_PAGES[u.t];
+  const c=currentCases()[u.t];
+  const ep=currentEvalPage(u);
   if(c){
     links.push(`<a class="pdf-link case-link" href="${currentNierPdf()}#page=${c.page}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">第3編・事例${c.no}</span>${esc(c.keyword)}</span><span>PDF p.${c.page} ↗</span></a>`);
   }
