@@ -7,8 +7,8 @@
 <meta name="description" content="学習指導要領の内容構成を学年・領域ごとにたどり、各単元の目標を確認できるインタラクティブ資料です。">
 <style>
 :root{
-  --bg:#f7f7f5;--panel:#ffffff;--ink:#171717;--muted:#686868;--line:#d8d8d2;
-  --accent:#1f5f54;--accent-soft:#e9f1ef;
+  --bg:#54B6CC;--panel:#ffffff;--ink:#171717;--muted:#686868;--line:#d8d8d2;
+  --accent:#003F99;--accent-soft:#E8F0FF;
   --energy:#c55a43;--particle:#b28a2b;--life:#4b7d55;--earth:#4b6f98;
 }
 *{box-sizing:border-box}
@@ -19,19 +19,23 @@ button{cursor:pointer}
 .app{max-width:1500px;margin:0 auto;padding:20px}
 header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .title-wrap{min-width:0;flex:1}
-h1{font-size:clamp(22px,3vw,34px);line-height:1.15;margin:0;font-weight:750;letter-spacing:.01em}
-.subtitle{margin-top:6px;color:var(--muted);font-size:13px}
-.icon-btn{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:20px}
-.icon-btn:hover,.icon-btn:focus-visible{border-color:var(--accent);outline:2px solid var(--accent-soft)}
+h1{font-size:clamp(22px,3vw,34px);line-height:1.15;margin:0;font-weight:750;letter-spacing:.01em;color:#fff}
+.subtitle{margin-top:6px;color:rgba(255,255,255,.88);font-size:13px}
+.icon-btn{width:44px;height:44px;border:2px solid var(--accent);color:var(--accent);border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:20px}
+.icon-btn:hover,.icon-btn:focus-visible{border-color:var(--accent);outline:3px solid rgba(0,63,153,.2)}
+.qr-btn{width:54px;height:54px;flex:0 0 auto;border:2px solid var(--accent);border-radius:9px;background:#fff;padding:4px;display:grid;place-items:center}
+.qr-btn img{display:block;width:100%;height:100%;object-fit:contain}
+.qr-btn:hover,.qr-btn:focus-visible{outline:3px solid rgba(0,63,153,.2);outline-offset:2px}
+.qr-large{display:block;width:min(320px,78vw);height:auto;margin:12px auto;background:#fff;border:10px solid #fff}
 .controls{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) minmax(220px,2fr);gap:10px;margin-bottom:10px}
 .control{display:flex;flex-direction:column;gap:5px}
-.control label{font-size:12px;color:var(--muted);font-weight:650}
+.control label{font-size:12px;color:#fff;font-weight:700}
 select,input[type=search]{height:44px;border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:0 12px;outline:none}
 select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .status{min-height:38px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
 .badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12px;color:var(--muted)}
 .badge.ready{color:var(--accent);border-color:#b9d5ce;background:var(--accent-soft)}
-.hint{font-size:12px;color:var(--muted);margin-left:auto}
+.hint{font-size:12px;color:rgba(255,255,255,.92);margin-left:auto}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .matrix{min-width:1040px}
 .head,.row{display:grid;grid-template-columns:86px repeat(4,minmax(230px,1fr))}
@@ -49,7 +53,7 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .unit[data-pillar="地球"]{border-left-color:var(--earth)}
 .unit strong{display:block;font-size:13px}
 .unit small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
-.unit:hover{transform:translateY(-1px);border-color:#8e8e87;box-shadow:0 3px 10px rgba(0,0,0,.07)}
+.unit:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 3px 10px rgba(0,63,153,.13)}
 .unit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .unit[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:1px;background:#fbfdfc}
 .empty{color:#aaa;font-size:12px;text-align:center;padding:14px 0}
@@ -74,12 +78,14 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .modal-head{display:flex;align-items:center;gap:10px}
 .modal-head h2{margin:0;font-size:20px;flex:1}
 .help-list{padding-left:1.3em;line-height:1.8;font-size:14px}
-.source-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:var(--accent);font-weight:700;text-decoration:none}
-.source-link:hover{text-decoration:underline}
+.source-link,.pdf-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:var(--accent);font-weight:750;text-decoration:none}
+.source-link:hover,.pdf-link:hover{text-decoration:underline}
+.pdf-link{border:1px solid var(--accent);border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
+.pdf-note{font-size:11px;line-height:1.55;color:var(--muted);margin-top:7px}
 .coming{padding:34px 20px;text-align:center}
 .coming h2{font-size:20px;margin:0 0 10px}
 .coming p{color:var(--muted);line-height:1.7;margin:0}
-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:14px;padding:0 2px}
+footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:rgba(255,255,255,.92);font-size:11px;margin-top:14px;padding:0 2px}
 @media(max-width:760px){
   .app{padding:14px}
   .controls{grid-template-columns:1fr 1fr}.control.search{grid-column:1/-1}
@@ -91,6 +97,9 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
 <body>
 <main class="app">
   <header>
+    <button class="qr-btn" id="qrBtn" type="button" aria-label="このアプリのQRコードを拡大表示" title="QRコード">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;data=https%3A%2F%2Fscd-ku.github.io%2Fshidouyouryou%2F" alt="学指導要領の内容構成 QRコード">
+    </button>
     <div class="title-wrap">
       <h1>学指導要領の内容構成</h1>
       <div class="subtitle">学年・領域のつながりと、各単元で身に付ける事項を一覧する</div>
@@ -145,6 +154,19 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
   </div>
   <div class="pop-label">学習指導要領の該当記述</div>
   <div class="pop-text" id="popText"></div>
+  <a class="pdf-link" id="popPdf" href="#" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く ↗</a>
+  <div class="pdf-note">PDFの該当単元ページを開きます。枠の下に続く「本内容は，…」以降で、（ア）（イ）など各小項目の詳しい解説を確認できます。</div>
+</div>
+
+<div class="modal" id="qrModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <div class="modal-head">
+      <h2 id="qrTitle">このアプリを開く</h2>
+      <button class="icon-btn" id="qrClose" type="button" aria-label="QRコードを閉じる">×</button>
+    </div>
+    <img class="qr-large" src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&amp;data=https%3A%2F%2Fscd-ku.github.io%2Fshidouyouryou%2F" alt="https://scd-ku.github.io/shidouyouryou/ のQRコード">
+    <div style="text-align:center;font-size:13px;color:var(--muted);word-break:break-all">https://scd-ku.github.io/shidouyouryou/</div>
+  </div>
 </div>
 
 <div class="modal" id="helpModal" hidden>
@@ -349,7 +371,10 @@ const pop=document.getElementById("popover");
 const popMeta=document.getElementById("popMeta");
 const popTitle=document.getElementById("popTitle");
 const popText=document.getElementById("popText");
+const popPdf=document.getElementById("popPdf");
 const popClose=document.getElementById("popClose");
+const MEXT_PDF="https://www.mext.go.jp/content/20211020-mxt_kyoiku02-100002607_05.pdf";
+const pdfUrl=(u)=>MEXT_PDF+"#page="+(Number(u.pg)+5);
 let pinned=null, hideTimer=null;
 
 function schoolName(v){return v==="elementary"?"小学校":v==="middle"?"中学校":"高等学校"}
@@ -405,6 +430,8 @@ function showPopover(i,btn,fromFocus=false){
   popMeta.textContent="小学校 "+u.g.slice(1)+"年 ｜ "+u.p+" ｜ "+u.s+" ｜ 解説 p."+u.pg;
   popTitle.textContent=u.t;
   popText.textContent=u.o;
+  popPdf.href=pdfUrl(u);
+  popPdf.textContent="解説本文（「本内容は…」）をPDFで開く（解説 p."+u.pg+"） ↗";
   pop.hidden=false;
   if(fromFocus){
     const r=btn.getBoundingClientRect();
@@ -419,7 +446,7 @@ function pinUnit(i,btn){
   const u=DATA[i];
   showPopover(i,btn,true);
   const detail=document.getElementById("detail");
-  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)}</h2><div class="detail-text">${esc(u.o)}</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：解説 p.${esc(u.pg)}</div></aside></div>`;
+  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)}</h2><div class="detail-text">${esc(u.o)}</div><a class="pdf-link" href="${pdfUrl(u)}" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く（解説 p.${esc(u.pg)}） ↗</a><div class="pdf-note">（ア）（イ）など各小項目の具体的な解説へ続く該当ページを開きます。</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：解説 p.${esc(u.pg)}</div></aside></div>`;
 }
 function clearPin(){
   pinned=null;pop.hidden=true;
@@ -431,7 +458,12 @@ search.addEventListener("input",render);
 pop.addEventListener("mouseenter",()=>clearTimeout(hideTimer));
 pop.addEventListener("mouseleave",scheduleHide);
 popClose.addEventListener("click",clearPin);
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){clearPin();document.getElementById("helpModal").hidden=true}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){clearPin();document.getElementById("helpModal").hidden=true;document.getElementById("qrModal").hidden=true}});
+
+const qrModal=document.getElementById("qrModal");
+document.getElementById("qrBtn").addEventListener("click",()=>qrModal.hidden=false);
+document.getElementById("qrClose").addEventListener("click",()=>qrModal.hidden=true);
+qrModal.addEventListener("click",e=>{if(e.target===qrModal)qrModal.hidden=true});
 
 const helpModal=document.getElementById("helpModal");
 document.getElementById("helpBtn").addEventListener("click",()=>helpModal.hidden=false);
