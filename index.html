@@ -51,7 +51,9 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .unit[data-pillar="粒子"]{border-left-color:var(--particle)}
 .unit[data-pillar="生命"]{border-left-color:var(--life)}
 .unit[data-pillar="地球"]{border-left-color:var(--earth)}
-.unit strong{display:block;font-size:13px}
+.unit-title-row{display:flex;align-items:flex-start;gap:7px}
+.unit-title-row strong{display:block;font-size:13px;flex:1;min-width:0}
+.case-mark{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:-1px;padding:2px 6px;border-radius:999px;background:var(--accent);color:#fff;font-size:9px;font-weight:800;letter-spacing:.04em;line-height:1.4}
 .unit small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
 .unit:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 3px 10px rgba(0,63,153,.13)}
 .unit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -82,6 +84,13 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .source-link:hover,.pdf-link:hover{text-decoration:underline}
 .pdf-link{border:1px solid var(--accent);border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
 .pdf-note{font-size:11px;line-height:1.55;color:var(--muted);margin-top:7px}
+.resource-links{display:flex;flex-direction:column;align-items:stretch;gap:7px;margin-top:5px}
+.resource-links .pdf-link{margin-top:0;justify-content:space-between}
+.resource-links .pdf-link.case-link{background:var(--accent-soft);border-width:2px}
+.resource-links .pdf-link .link-kicker{display:block;font-size:9px;line-height:1.2;color:var(--muted);font-weight:700;margin-bottom:2px}
+.source-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:6px}
+.help-sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.help-sources .source-link{margin-top:0;border:1px solid var(--accent);border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
 .coming{padding:34px 20px;text-align:center}
 .coming h2{font-size:20px;margin:0 0 10px}
 .coming p{color:var(--muted);line-height:1.7;margin:0}
@@ -156,6 +165,9 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
   <div class="pop-text" id="popText"></div>
   <a class="pdf-link" id="popPdf" href="#" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く ↗</a>
   <div class="pdf-note">PDFの該当単元ページを開きます。枠の下に続く「本内容は，…」以降で、（ア）（イ）など各小項目の詳しい解説を確認できます。</div>
+  <div class="pop-label">学習評価資料（国立教育政策研究所）</div>
+  <div class="resource-links" id="popNierLinks"></div>
+  <div class="source-note">「事例」表示のある単元には第3編の具体的な学習評価事例があります。全単元から巻末資料「内容のまとまりごとの評価規準（例）」の該当ページを開けます。</div>
 </div>
 
 <div class="modal" id="qrModal" hidden>
@@ -179,11 +191,17 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
       <li>学習指導要領の内容を、学年と「エネルギー・粒子・生命・地球」の系統で一覧できます。</li>
       <li>各単元にマウスを置くと、その単元で身に付ける事項（知識・技能、思考力・判断力・表現力等）をポップアップ表示します。</li>
       <li>ポップアップ内の「解説本文をPDFで開く」から、同じ単元の「本内容は，…」以降と（ア）（イ）などの詳しい解説がある文部科学省PDFの該当ページへ移動できます。</li>
+      <li>国立教育政策研究所『「指導と評価の一体化」のための学習評価に関する参考資料【小学校理科】』も対応付けています。表で「事例」と表示した単元は、第3編「単元ごとの学習評価について（事例）」の該当事例へ直接移動できます。</li>
+      <li>すべての小学校理科の単元から、同資料の巻末資料「2 内容のまとまりごとの評価規準（例）」にある、その単元の「知識・技能」「思考・判断・表現」「主体的に学習に取り組む態度」の評価規準へ移動できます。</li>
       <li>単元をクリック／タップすると詳細を固定表示できます。</li>
       <li>学校段階と教科を切り替えられる構造にしてあり、中学校・高等学校、算数・数学、技術・家庭を順次追加できます。</li>
       <li>現在は「小学校・理科」を収録しています。</li>
     </ul>
-    <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387014.htm" target="_blank" rel="noopener noreferrer">文部科学省「学習指導要領」ページ ↗</a>
+    <div class="help-sources">
+      <a class="source-link" href="https://www.mext.go.jp/a_menu/shotou/new-cs/1387014.htm" target="_blank" rel="noopener noreferrer">文部科学省「学習指導要領」ページ ↗</a>
+      <a class="source-link" href="https://www.nier.go.jp/kaihatsu/shidousiryou.html" target="_blank" rel="noopener noreferrer">国立教育政策研究所「指導資料・事例集」 ↗</a>
+      <a class="source-link" href="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_pri_rika.pdf#page=87" target="_blank" rel="noopener noreferrer">小学校理科「評価規準（例）」巻末資料 ↗</a>
+    </div>
   </div>
 </div>
 
@@ -373,15 +391,69 @@ const popMeta=document.getElementById("popMeta");
 const popTitle=document.getElementById("popTitle");
 const popText=document.getElementById("popText");
 const popPdf=document.getElementById("popPdf");
+const popNierLinks=document.getElementById("popNierLinks");
 const popClose=document.getElementById("popClose");
 const MEXT_PDF="https://www.mext.go.jp/content/20211020-mxt_kyoiku02-100002607_05.pdf";
+const NIER_PDF="https://www.nier.go.jp/kaihatsu/pdf/hyouka/r020326_pri_rika.pdf";
 const pdfUrl=(u)=>MEXT_PDF+"#page="+(Number(u.pg)+5);
+const nierUrl=(page)=>NIER_PDF+"#page="+page;
+const NIER_CASES={
+  "太陽と地面の様子":{no:1,page:52,keyword:"指導と評価の計画から評価の総括まで"},
+  "電流の働き":{no:2,page:60,keyword:"「知識・技能」の評価"},
+  "燃焼の仕組み":{no:3,page:68,keyword:"「思考・判断・表現」の評価"},
+  "動物の誕生":{no:4,page:76,keyword:"「主体的に学習に取り組む態度」の評価"}
+};
+const NIER_EVAL_PAGES={
+  "物と重さ":87,
+  "風とゴムの力の働き":88,
+  "光と音の性質":88,
+  "磁石の性質":88,
+  "電気の通り道":89,
+  "身の回りの生物":89,
+  "太陽と地面の様子":90,
+  "空気と水の性質":91,
+  "金属，水，空気と温度":91,
+  "電流の働き":92,
+  "人の体のつくりと運動":92,
+  "季節と生物":92,
+  "雨水の行方と地面の様子":92,
+  "天気の様子":93,
+  "月と星":93,
+  "物の溶け方":94,
+  "振り子の運動":95,
+  "電流がつくる磁力":95,
+  "植物の発芽，成長，結実":95,
+  "動物の誕生":96,
+  "流れる水の働きと土地の変化":96,
+  "天気の変化":97,
+  "燃焼の仕組み":98,
+  "水溶液の性質":98,
+  "てこの規則性":98,
+  "電気の利用":99,
+  "人の体のつくりと働き":99,
+  "植物の養分と水の通り道":100,
+  "生物と環境":100,
+  "土地のつくりと変化":100,
+  "月と太陽":101
+};
 let pinned=null, hideTimer=null;
 
 function schoolName(v){return v==="elementary"?"小学校":v==="middle"?"中学校":"高等学校"}
 function subjectName(v){return v==="science"?"理科":v==="math"?"算数・数学":"技術・家庭"}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function isReady(){return school.value==="elementary" && subject.value==="science"}
+function nierLinksHtml(u){
+  const links=[];
+  const c=NIER_CASES[u.t];
+  const ep=NIER_EVAL_PAGES[u.t];
+  if(c){
+    links.push(`<a class="pdf-link case-link" href="${nierUrl(c.page)}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">第3編・事例${c.no}</span>${esc(c.keyword)}</span><span>PDF p.${c.page} ↗</span></a>`);
+  }
+  if(ep){
+    links.push(`<a class="pdf-link" href="${nierUrl(ep)}" target="_blank" rel="noopener noreferrer"><span><span class="link-kicker">巻末資料 2</span>この単元の「内容のまとまりごとの評価規準（例）」</span><span>PDF p.${ep} ↗</span></a>`);
+  }
+  return links.join("");
+}
 
 function render(){
   pinned=null; pop.hidden=true;
@@ -401,7 +473,7 @@ function render(){
     html+='<div class="row"><div class="grade">小学校<br>'+g.slice(1)+'年</div>';
     for(const p of pillars){
       const arr=filtered.map((u,i)=>({u,idx:DATA.indexOf(u)})).filter(x=>x.u.g===g&&x.u.p===p);
-      html+='<div class="cell">'+(arr.length?arr.map(({u,idx})=>`<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false"><strong>${esc(u.t)}</strong><small>${esc(u.s)}</small></button>`).join(""):'<div class="empty">—</div>')+'</div>';
+      html+='<div class="cell">'+(arr.length?arr.map(({u,idx})=>`<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false"><span class="unit-title-row"><strong>${esc(u.t)}</strong>${NIER_CASES[u.t]?'<span class="case-mark" title="国立教育政策研究所の学習評価事例あり">事例</span>':''}</span><small>${esc(u.s)}</small></button>`).join(""):'<div class="empty">—</div>')+'</div>';
     }
     html+='</div>';
   }
@@ -433,6 +505,7 @@ function showPopover(i,btn,fromFocus=false){
   popText.textContent=u.o;
   popPdf.href=pdfUrl(u);
   popPdf.textContent="解説本文（「本内容は…」）をPDFで開く（解説 p."+u.pg+"） ↗";
+  popNierLinks.innerHTML=nierLinksHtml(u);
   pop.hidden=false;
   if(fromFocus){
     const r=btn.getBoundingClientRect();
@@ -447,7 +520,8 @@ function pinUnit(i,btn){
   const u=DATA[i];
   showPopover(i,btn,true);
   const detail=document.getElementById("detail");
-  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)}</h2><div class="detail-text">${esc(u.o)}</div><a class="pdf-link" href="${pdfUrl(u)}" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く（解説 p.${esc(u.pg)}） ↗</a><div class="pdf-note">（ア）（イ）など各小項目の具体的な解説へ続く該当ページを開きます。</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：解説 p.${esc(u.pg)}</div></aside></div>`;
+  const c=NIER_CASES[u.t];
+  detail.innerHTML=`<div class="detail-grid"><div><div class="detail-label">学習指導要領の該当記述</div><h2>${esc(u.t)} ${c?'<span class="case-mark">事例</span>':''}</h2><div class="detail-text">${esc(u.o)}</div><a class="pdf-link" href="${pdfUrl(u)}" target="_blank" rel="noopener noreferrer">解説本文（「本内容は…」）をPDFで開く（解説 p.${esc(u.pg)}） ↗</a><div class="pdf-note">（ア）（イ）など各小項目の具体的な解説へ続く該当ページを開きます。</div><div class="detail-label" style="margin-top:14px">学習評価資料（国立教育政策研究所）</div><div class="resource-links">${nierLinksHtml(u)}</div></div><aside class="detail-side"><div class="detail-label">位置付け</div><div class="detail-note">小学校 ${esc(u.g.slice(1))}年<br>${esc(u.p)}<br>${esc(u.s)}<br><br>出典：学習指導要領解説 p.${esc(u.pg)}${c?'<br><br>国立教育政策研究所 事例'+c.no:''}</div></aside></div>`;
 }
 function clearPin(){
   pinned=null;pop.hidden=true;
