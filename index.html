@@ -534,8 +534,16 @@ function spanFor(u){
   return window.PILLAR_SPANS?.[key]||[1,tracks.length+1];
 }
 function wireUnitButtons(){
-  wirePillarButtons();
-  wireUnitButtons();
+  document.querySelectorAll(".unit").forEach(btn=>{
+    const i=Number(btn.dataset.i);
+    btn.addEventListener("mouseenter",e=>showPopover(i,e.currentTarget));
+    btn.addEventListener("mousemove",e=>positionPopover(e.clientX,e.clientY));
+    btn.addEventListener("mouseleave",scheduleHide);
+    btn.addEventListener("focus",e=>showPopover(i,e.currentTarget,true));
+    btn.addEventListener("blur",scheduleHide);
+    btn.addEventListener("click",()=>pinUnit(i,btn));
+  });
+}
 function wirePillarButtons(){
   document.querySelectorAll("[data-pillar-detail]").forEach(btn=>{
     btn.addEventListener("click",()=>{
@@ -645,15 +653,8 @@ function render(){
   }
   html+='</div></div><div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
   content.innerHTML=html;
-  document.querySelectorAll(".unit").forEach(btn=>{
-    const i=Number(btn.dataset.i);
-    btn.addEventListener("mouseenter",e=>showPopover(i,e.currentTarget));
-    btn.addEventListener("mousemove",e=>positionPopover(e.clientX,e.clientY));
-    btn.addEventListener("mouseleave",scheduleHide);
-    btn.addEventListener("focus",e=>showPopover(i,e.currentTarget,true));
-    btn.addEventListener("blur",scheduleHide);
-    btn.addEventListener("click",()=>pinUnit(i,btn));
-  });
+  wirePillarButtons();
+  wireUnitButtons();
 }
 function positionPopover(x,y){
   const pad=12, w=pop.offsetWidth||960, h=Math.min(pop.offsetHeight||620,window.innerHeight*.8);
