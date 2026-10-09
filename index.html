@@ -139,6 +139,27 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .eval-body{padding:8px 10px;font-size:11.5px;line-height:1.62}
 .eval-body ul{margin:0;padding-left:1.25em}
 .eval-body li+li{margin-top:5px}
+.competency-section{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.competency-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:14px 16px;background:#eef5ff;border-bottom:1px solid var(--line)}
+.competency-section-head h2{margin:0;font-size:17px;color:var(--accent)}
+.competency-section-head p{margin:4px 0 0;font-size:11px;line-height:1.6;color:var(--muted)}
+.cap-block+.cap-block{border-top:4px solid #d9e3f0}
+.cap-stage-title{padding:8px 12px;background:#f7f9fb;border-bottom:1px solid var(--line);font-size:13px;font-weight:800}
+.cap-header{display:grid;grid-template-columns:180px repeat(4,minmax(180px,1fr));border-bottom:1px solid var(--line);min-width:900px}
+.cap-header>div{padding:8px 10px;text-align:center;font-size:12px;font-weight:800;background:#f3f3f0;border-right:1px solid var(--line)}
+.cap-header>div:last-child{border-right:0}
+.cap-category{display:grid;grid-template-columns:100px minmax(800px,1fr);border-bottom:1px solid var(--line);min-width:900px}
+.cap-category:last-child{border-bottom:0}
+.cap-category-label{display:flex;align-items:center;justify-content:center;padding:10px 6px;background:#fafafa;border-right:1px solid var(--line);font-size:11px;font-weight:800;line-height:1.5;text-align:center;writing-mode:vertical-rl;text-orientation:mixed}
+.cap-category-body{min-width:0}
+.cap-row{display:grid;grid-template-columns:80px repeat(4,minmax(180px,1fr));border-bottom:1px solid var(--line)}
+.cap-row:last-child{border-bottom:0}
+.cap-grade{display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 5px;background:#fbfbfa;border-right:1px solid var(--line);font-size:11px;font-weight:750;line-height:1.45}
+.cap-cell{margin:6px;padding:8px 10px;border:1px solid #cfd5dc;border-radius:8px;background:#fff;font-size:11.5px;line-height:1.6;white-space:pre-line;align-self:stretch}
+.cap-cell.thinking{border-left:4px solid #7c6a15}
+.cap-cell.attitude{border-left:4px solid #3d7a4b;background:#fbfefb}
+.cap-domain-spacer{border-right:1px dashed #d6d6d0}
+.competency-scroll{overflow-x:auto}
 .help-sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .help-sources .source-link{margin-top:0;border:1px solid var(--accent);border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
 .coming{padding:34px 20px;text-align:center}
@@ -151,7 +172,10 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
   .hint{width:100%;margin-left:0}
   .detail-grid{grid-template-columns:1fr}.detail-side{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:12px}
   .eval-grid{grid-template-columns:1fr}
+  .competency-section-head{display:block}
+  .cap-category-label{writing-mode:horizontal-tb;padding:8px}
 }
+
 </style>
 </head>
 <body>
@@ -248,6 +272,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
       <li>小学校理科の全31単元について、同資料の巻末資料「2 内容のまとまりごとの評価規準（例）」が収録されています。そのため評価資料の有無を示す個別マークは付けず、全単元のポップアップ内に「知識・技能」「思考・判断・表現」「主体的に学習に取り組む態度」の3観点を直接表示しています。</li>
       <li>単元をクリック／タップすると詳細を固定表示できます。</li>
       <li>「校種」で小学校・中学校・高等学校を個別表示できるほか、「小・中・高（接続）」を選ぶと、4つの柱に沿って三つの校種を連続した一つの表として表示できます。</li>
+      <li>内容構成表の下には「思考力・判断力・表現力等及び学びに向かう力・人間性等」の接続表を表示します。小学校を選んだ場合は小学校のみ、中学校は中学校のみ、高等学校は高等学校のみ、「小・中・高（接続）」では三つの校種を続けて表示します。</li>
       <li>中学校理科では、第1学年は内容（1）（2）、第2学年は（3）（4）、第3学年は（5）〜（7）として学習指導要領の配当どおりに表示しています。</li>
       <li>高等学校理科では、「エネルギー→物理基礎」「粒子→化学基礎」「生命→生物基礎」「地球→地学基礎」として、学習指導要領解説の内容構成図と同じ接続関係で表示します。</li>
       <li>高等学校理科の国立教育政策研究所の評価資料は、次の段階で追加予定です。</li>
@@ -268,6 +293,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
 <script src="middle-data.js"></script>
 <script src="high-science-data.js"></script>
 <script src="pillar-layout-data.js"></script>
+<script src="competency-data.js"></script>
 <script>
 const DATA = [
   {g:"小3",p:"粒子",s:"粒子の保存性",t:"物と重さ",pg:"31",o:`物の性質について，形や体積に着目して，重さを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
@@ -528,6 +554,16 @@ function currentMextPageLabel(u){const st=unitStage(u);return st==="high"?u.pg:s
 function currentMextSource(u){const st=unitStage(u);return st==="high"?"高等学校学習指導要領解説 理科編・理数編":st==="middle"?"中学校学習指導要領解説 理科編":"小学校学習指導要領解説 理科編"}
 function gradeLabel(g){return g==="高"?"高等学校":g.startsWith("小")?"小学校<br>"+g.slice(1)+"年":"中学校<br>"+g.slice(1)+"年"}
 const highCourses={エネルギー:"物理基礎",粒子:"化学基礎",生命:"生物基礎",地球:"地学基礎"}
+function competencySectionHtml(){
+  if(subject.value!=="science") return "";
+  const map=window.COMPETENCY_TABLES||{};
+  const keys=school.value==="all"?["elementary","middle","high"]:[school.value];
+  const valid=keys.filter(k=>map[k]);
+  if(!valid.length) return "";
+  const rowHtml=(row,type)=>`<div class="cap-row"><div class="cap-grade">${esc(row.grade||"")}</div>${row.cells.map(c=>`<div class="cap-cell ${type}" style="grid-column:${c.start+1}/${c.end+1}">${esc(c.text)}</div>`).join("")}</div>`;
+  const blockHtml=(d)=>`<div class="cap-block"><div class="cap-stage-title">${esc(d.stage)}</div><div class="competency-scroll"><div class="cap-header"><div>資質・能力／学年</div>${d.headers.map(h=>`<div>${esc(h)}</div>`).join("")}</div><div class="cap-category"><div class="cap-category-label">思考力・判断力・表現力等</div><div class="cap-category-body">${d.thinking.map(r=>rowHtml(r,"thinking")).join("")}</div></div><div class="cap-category"><div class="cap-category-label">学びに向かう力・人間性等</div><div class="cap-category-body">${d.attitudes.map(r=>rowHtml(r,"attitude")).join("")}</div></div></div></div>`;
+  return `<section class="competency-section"><div class="competency-section-head"><div><h2>思考力・判断力・表現力等及び学びに向かう力・人間性等</h2><p>内容構成表の下に、学習指導要領で示される資質・能力の接続を校種ごとに表示します。</p></div></div>${valid.map(k=>blockHtml(map[k])).join("")}</section>`;
+}
 function spanFor(u){
   const key=`${u.g}|${u.p}|${u.t}`;
   const tracks=window.PILLAR_TRACKS?.[u.p]||[];
@@ -582,7 +618,7 @@ function renderPillarDetail(filtered,activeData,grades){
     }
     html+='</div></div>';
   }
-  html+='</div></div><div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
+  html+='</div></div>'+competencySectionHtml()+'<div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
   content.innerHTML=html;
   document.getElementById("pillarBack")?.addEventListener("click",()=>{selectedPillar=null;render()});
   wireUnitButtons();
@@ -651,7 +687,7 @@ function render(){
     }
     html+='</div>';
   }
-  html+='</div></div><div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
+  html+='</div></div>'+competencySectionHtml()+'<div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
   content.innerHTML=html;
   wirePillarButtons();
   wireUnitButtons();
