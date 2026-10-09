@@ -39,11 +39,34 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .matrix{min-width:1040px}
 .head,.row{display:grid;grid-template-columns:86px repeat(4,minmax(230px,1fr))}
-.head>div,.row>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-.head>div:last-child,.row>div:last-child{border-right:0}
+.head>*,.row>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.head>*:last-child,.row>div:last-child{border-right:0}
 .row:last-child>div{border-bottom:0}
 .corner,.pillar{background:#f1f1ee;padding:10px;text-align:center;font-weight:700}
 .pillar small{display:block;margin-top:3px;font-weight:500;color:var(--muted);font-size:10px}
+.pillar-button{border:0;min-width:0;position:relative}
+.pillar-button:hover,.pillar-button:focus-visible{background:#e8edf4;color:var(--accent);outline:none}
+.pillar-button::after{content:"詳しく見る";display:block;margin-top:5px;font-size:9px;font-weight:700;color:var(--accent);opacity:.78}
+.pillar-detail{background:#fff}
+.pillar-detail-toolbar{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);background:#f8fafc}
+.pillar-back{border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-size:11px;font-weight:800;padding:7px 10px;white-space:nowrap}
+.pillar-detail-title{font-size:14px;font-weight:800}
+.pillar-detail-note{font-size:10px;line-height:1.5;color:var(--muted);margin-top:2px}
+.pillar-detail-head{display:grid;border-bottom:1px solid var(--line)}
+.pillar-detail-head>*{border-right:1px solid var(--line)}
+.pillar-detail-head>*:last-child{border-right:0}
+.track-head{background:#f1f1ee;padding:10px 8px;text-align:center;font-size:12px;font-weight:800;line-height:1.4}
+.pillar-detail-row{display:grid;border-bottom:1px solid var(--line)}
+.pillar-detail-row:last-child{border-bottom:0}
+.pillar-detail-row.stage-start{border-top:3px solid var(--accent)}
+.pillar-detail-row>.grade{border-right:1px solid var(--line)}
+.track-grid{position:relative;display:grid;grid-template-columns:repeat(var(--track-count),minmax(210px,1fr));grid-auto-flow:row dense;grid-auto-rows:minmax(58px,auto);gap:8px;padding:8px;min-height:82px;align-items:stretch}
+.track-guides{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--track-count),1fr);pointer-events:none}
+.track-guide{border-right:1px dashed #cfcfc8}
+.track-guide:last-child{border-right:0}
+.track-grid>.unit{z-index:1;height:100%}
+.track-grid>.empty{grid-column:1/-1;z-index:1}
+.span-note{display:inline-flex;align-items:center;margin-left:5px;padding:1px 5px;border-radius:999px;background:#eef2f7;color:var(--accent);font-size:8px;font-weight:800}
 .grade{background:#f6f6f3;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:750;padding:10px 5px}
 .row.stage-start>div{border-top:3px solid var(--accent)}
 .course-banner{font-size:11px;font-weight:800;text-align:center;padding:5px 7px;border-radius:7px;background:#f1f4f8;color:var(--accent);margin-bottom:2px}
@@ -218,6 +241,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
     </div>
     <ul class="help-list">
       <li>小学校・中学校・高等学校の理科を、「エネルギー・粒子・生命・地球」の4つの柱で一覧できます。高等学校は、図2・図3（解説16〜19ページ）に示された「物理基礎・化学基礎・生物基礎・地学基礎」を対応させています。</li>
+      <li>表上部の「エネルギー」「粒子」「生命」「地球」をクリックすると、その柱の詳細表に切り替わります。例えばエネルギーでは「エネルギーの捉え方」「エネルギーの変換と保存」「エネルギー資源の有効利用」の列を表示し、単元が複数の列にまたがる場合も図2・図3に合わせて横断表示します。</li>
       <li>各単元にマウスを置くと、学習指導要領解説の該当記述をポップアップ表示します。小・中学校では、これまで追加した学習評価資料もあわせて確認できます。</li>
       <li>ポップアップ内の「解説本文をPDFで開く」から、同じ単元の「本内容は，…」以降と（ア）（イ）などの詳しい解説がある文部科学省PDFの該当ページへ移動できます。</li>
       <li>国立教育政策研究所『「指導と評価の一体化」のための学習評価に関する参考資料【小学校理科】』も対応付けています。表で「事例」と表示した単元は、第3編「単元ごとの学習評価について（事例）」の該当事例へ直接移動できます。</li>
@@ -243,6 +267,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:
 <script src="evaluation-data.js"></script>
 <script src="middle-data.js"></script>
 <script src="high-science-data.js"></script>
+<script src="pillar-layout-data.js"></script>
 <script>
 const DATA = [
   {g:"小3",p:"粒子",s:"粒子の保存性",t:"物と重さ",pg:"31",o:`物の性質について，形や体積に着目して，重さを比較しながら調べる活動を通して，次の事項を身に付けることができるよう指導する。
@@ -479,7 +504,7 @@ const NIER_EVAL_PAGES={
   "土地のつくりと変化":100,
   "月と太陽":101
 };
-let pinned=null, hideTimer=null;
+let pinned=null, hideTimer=null, selectedPillar=null;
 
 function schoolName(v){return v==="elementary"?"小学校":v==="middle"?"中学校":v==="high"?"高等学校":"小・中・高（接続）"}
 function subjectName(v){return v==="science"?"理科":v==="math"?"算数・数学":"技術・家庭"}
@@ -503,6 +528,48 @@ function currentMextPageLabel(u){const st=unitStage(u);return st==="high"?u.pg:s
 function currentMextSource(u){const st=unitStage(u);return st==="high"?"高等学校学習指導要領解説 理科編・理数編":st==="middle"?"中学校学習指導要領解説 理科編":"小学校学習指導要領解説 理科編"}
 function gradeLabel(g){return g==="高"?"高等学校":g.startsWith("小")?"小学校<br>"+g.slice(1)+"年":"中学校<br>"+g.slice(1)+"年"}
 const highCourses={エネルギー:"物理基礎",粒子:"化学基礎",生命:"生物基礎",地球:"地学基礎"}
+function spanFor(u){
+  const key=`${u.g}|${u.p}|${u.t}`;
+  const tracks=window.PILLAR_TRACKS?.[u.p]||[];
+  return window.PILLAR_SPANS?.[key]||[1,tracks.length+1];
+}
+function wireUnitButtons(){
+  document.querySelectorAll("[data-pillar-detail]").forEach(btn=>btn.addEventListener("click",()=>{selectedPillar=btn.dataset.pillarDetail;clearPin();render()}));
+  wireUnitButtons();
+}
+function renderPillarDetail(filtered,activeData,grades){
+  const p=selectedPillar;
+  const tracks=window.PILLAR_TRACKS?.[p]||[];
+  const units=filtered.filter(u=>u.p===p);
+  countBadge.textContent=units.length+" 単元";
+  const minWidth=86+tracks.length*230;
+  let html=`<div class="table-wrap"><div class="pillar-detail" style="min-width:${minWidth}px">`;
+  html+=`<div class="pillar-detail-toolbar"><button type="button" class="pillar-back" id="pillarBack">← 4分野の一覧へ</button><div><div class="pillar-detail-title">${esc(p)}の内容構成</div><div class="pillar-detail-note">文部科学省「理科編・理数編」図2・図3の横方向の位置関係に合わせ、複数の観点にまたがる単元は列をまたいで表示しています。</div></div></div>`;
+  html+=`<div class="pillar-detail-head" style="grid-template-columns:86px repeat(${tracks.length},minmax(210px,1fr))"><div class="corner">校種・学年</div>`+
+    tracks.map(t=>`<div class="track-head">${esc(t)}</div>`).join("")+'</div>';
+  for(const g of grades){
+    const stageStart=school.value==="all"&&(g==="中1"||g==="高");
+    const arr=units.map(u=>({u,idx:activeData.indexOf(u)})).filter(x=>x.u.g===g);
+    html+=`<div class="pillar-detail-row${stageStart?' stage-start':''}" style="grid-template-columns:86px minmax(${tracks.length*210}px,1fr)"><div class="grade">${gradeLabel(g)}</div><div class="track-grid" style="--track-count:${tracks.length}"><div class="track-guides">${tracks.map(()=>'<div class="track-guide"></div>').join("")}</div>`;
+    if(g==="高") html+=`<div class="course-banner" style="grid-column:1/-1">${highCourses[p]}</div>`;
+    if(arr.length){
+      html+=arr.map(({u,idx})=>{
+        const span=spanFor(u);
+        const cases=unitCasesMap(u);
+        const spansMultiple=span[1]-span[0]>1;
+        const sub=unitStage(u)==="high"?'解説 p.'+currentMextPageLabel(u):u.s;
+        return `<button type="button" class="unit" data-i="${idx}" data-pillar="${u.p}" aria-pressed="false" style="grid-column:${span[0]}/${span[1]}"><span class="unit-title-row"><strong>${esc(u.t)}</strong>${spansMultiple?'<span class="span-note">複数列</span>':''}${cases[u.t]?'<span class="case-mark" title="国立教育政策研究所の学習評価事例あり">事例</span>':''}</span><small>${esc(sub)}</small></button>`;
+      }).join("");
+    }else{
+      html+='<div class="empty">—</div>';
+    }
+    html+='</div></div>';
+  }
+  html+='</div></div><div class="detail" id="detail"><div class="detail-note">単元をクリック／タップすると、ここに学習指導要領の該当記述を固定表示します。</div></div>';
+  content.innerHTML=html;
+  document.getElementById("pillarBack")?.addEventListener("click",()=>{selectedPillar=null;render()});
+  wireUnitButtons();
+}
 function criteriaHtml(u){
   const c=currentCriteria(u);
   const ep=currentEvalPage(u);
@@ -543,13 +610,14 @@ function render(){
   const activeData=currentData();
   const grades=currentGrades();
   const filtered=activeData.filter(u=>!term || (u.t+" "+u.s+" "+u.o).toLowerCase().includes(term));
+  if(selectedPillar){renderPillarDetail(filtered,activeData,grades);return}
   countBadge.textContent=filtered.length+" 単元";
   let html='<div class="table-wrap">';
   if(school.value==="high"||school.value==="all"){
     html+='<div class="matrix-note"><strong>高等学校との接続：</strong> エネルギー → 物理基礎 ／ 粒子 → 化学基礎 ／ 生命 → 生物基礎 ／ 地球 → 地学基礎（高等学校学習指導要領解説 図2・図3）</div>';
   }
   html+='<div class="matrix">';
-  html+='<div class="head"><div class="corner">校種・学年</div>'+pillars.map(p=>`<div class="pillar">${p}<small>${views[p]}の視点</small></div>`).join("")+'</div>';
+  html+='<div class="head"><div class="corner">校種・学年</div>'+pillars.map(p=>`<button type="button" class="pillar pillar-button" data-pillar-detail="${p}" aria-label="${p}の内容構成を詳しく表示">${p}<small>${views[p]}の視点</small></button>`).join("")+'</div>';
   for(const g of grades){
     const stageStart=school.value==="all"&&(g==="中1"||g==="高");
     html+='<div class="row'+(stageStart?' stage-start':'')+'"><div class="grade">'+gradeLabel(g)+'</div>';
