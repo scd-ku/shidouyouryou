@@ -534,8 +534,17 @@ function spanFor(u){
   return window.PILLAR_SPANS?.[key]||[1,tracks.length+1];
 }
 function wireUnitButtons(){
-  document.querySelectorAll("[data-pillar-detail]").forEach(btn=>btn.addEventListener("click",()=>{selectedPillar=btn.dataset.pillarDetail;clearPin();render()}));
+  wirePillarButtons();
   wireUnitButtons();
+function wirePillarButtons(){
+  document.querySelectorAll("[data-pillar-detail]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      selectedPillar=btn.dataset.pillarDetail;
+      clearPin();
+      render();
+      content.scrollIntoView({block:"start",behavior:"smooth"});
+    });
+  });
 }
 function renderPillarDetail(filtered,activeData,grades){
   const p=selectedPillar;
